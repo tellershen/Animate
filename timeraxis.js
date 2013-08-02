@@ -209,4 +209,4 @@
     };
     base.TimerAxis = ClassObj;
 
-})(UIBASCE);
+})(UIBASE);
