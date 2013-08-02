@@ -1,5 +1,5 @@
-;(function (UI, undefined) {
-  var base = UI.base;
+;(function (NE, undefined) {
+    NE.namespace("TimerAxis");
     var defaultConfig = {
         director: function (e) { }, //导演
         duration: 0, //时长
@@ -8,7 +8,7 @@
         onStop: function (e) { }, //动画结束时调用的回调
         onContinue: function (e) { }, //动画继续时调用的函数
         onPause: function (e) { }, //动画暂停时调用的函数
-        setting: base, //帧内运行环境
+        setting: NE, //帧内运行环境
         loop: false//是否循环
     };
 
@@ -17,9 +17,9 @@
         var self = this;
         // factory or constructor
         if (!(self instanceof ClassObj)) {
-            return new ClassObj(base.merge(defaultConfig, config));
+            return new ClassObj(NE.merge(defaultConfig, config));
         }
-        this.config = base.merge(defaultConfig, config);
+        this.config = NE.merge(defaultConfig, config);
         this.Env = {
             steps: 0,
             curStep: 0,
@@ -32,7 +32,7 @@
             globe: [],
             stepAct: {}
         };
-        this.Guid = "TAxis" + ~ ~(new Date());
+        this.Guid = NE.getGuid();
         this.config.setting = this;
         this.Timers = {};
         this.stepsTotle = 0;
@@ -100,12 +100,12 @@
         }
         if (!flgJump) {
 
-            base.each(this.Scene.globe, function (i) {
+            NE.each(this.Scene.globe, function (i) {
                 i.call(me.config.setting, me.Env);
 
             })
             if (this.Scene.stepAct["step_" + this.Env.curStep]) {
-                base.each(this.Scene.stepAct["step_" + this.Env.curStep], function (i) {
+                NE.each(this.Scene.stepAct["step_" + this.Env.curStep], function (i) {
                     i.call(me.config.setting, me.Env);
                 })
             }
@@ -131,7 +131,7 @@
         return s;
     }
 
-    ClassObj.prototype={
+    NE.augment(ClassObj, {
         action: function () {
             setStatic.call(this, RUN);
             this.Env.curStep = 0;
@@ -199,14 +199,14 @@
             }
         },
         setConfig: function (cfg) {
-            this.config = base.merge(this.config, cfg);
+            this.config = NE.merge(this.config, cfg);
             init.call(this);
         },
         clearScene: function () {
             this.Scene.stepAct = {};
             this.Scene.globe = [];
         }
-    };
-    base.TimerAxis = ClassObj;
+    });
+    NE.TimerAxis = ClassObj;
 
-})(UIBASE);
+})(NEUI);
